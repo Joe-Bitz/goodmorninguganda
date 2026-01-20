@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Totally Legit Capital™ | Parody Finance Terminal</title>
+
+  <style>
+    :root{
+      --bg:#070A12;
+      --panel:#0E1325;
+      --panel2:#0B1020;
+      --text:#E7ECFF;
+      --muted:#A7B0D8;
+      --accent:#6EE7FF;
+      --accent2:#A78BFA;
+      --good:#34D399;
+      --warn:#FBBF24;
+      --bad:#FB7185;
+      --border:rgba(231,236,255,.08);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+      --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 15% 0%, rgba(167,139,250,.18), transparent 50%),
+        radial-gradient(900px 600px at 85% 10%, rgba(110,231,255,.18), transparent 55%),
+        linear-gradient(180deg,#050713,#070A12 40%,#050713);
+    }
+
+    .wrap{max-width:1180px;margin:0 auto;padding:24px}
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:16px 18px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:rgba(14,19,37,.9);
+      box-shadow:var(--shadow);
+    }
+
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:conic-gradient(from 220deg,var(--accent),var(--accent2),var(--accent));
+    }
+    h1{margin:0;font-size:14px;text-transform:uppercase;letter-spacing:.6px}
+    .muted{color:var(--muted)}
+
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(7,10,18,.4);
+      font-size:12px;
+    }
+
+    .parody{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(251,191,36,.3);
+      background:rgba(251,191,36,.12);
+      font-size:12px;
+      color:#FFE9A8;
+    }
+
+    .hero{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:16px;
+    }
+
+    .card{
+      padding:18px;
+      border-radius:var(--radius);
+      border:1px solid var(--border);
+      background:rgba(14,19,37,.85);
+      box-shadow:var(--shadow);
+    }
+
+    .title{font-size:28px;margin:10px 0}
+    .subtitle{font-size:14px;color:var(--muted);line-height:1.6}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .metric{
+      padding:14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(7,10,18,.4);
+    }
+
+    .label{
+      display:flex;
+      justify-content:space-between;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .value{
+      margin-top:8px;
+      font-family:var(--mono);
+      font-size:18px;
+    }
+
+    .badge{
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:11px;
+      border:1px solid var(--border);
+    }
+
+    .good{color:#BFF7E3;border-color:rgba(52,211,153,.3)}
+    .warn{color:#FFE9A8;border-color:rgba(251,191,36,.3)}
+    .bad{color:#FFD0D9;border-color:rgba(251,113,133,.3)}
+
+    .buttons{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(231,236,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      font-size:13px;
+      text-decoration:none;
+    }
+    .btn.primary{
+      background:linear-gradient(90deg,rgba(110,231,255,.2),rgba(167,139,250,.2));
+    }
+
+    table{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:12px;font-size:13px}
+    tr{background:rgba(7,10,18,.4);border:1px solid var(--border)}
+    td{padding:12px}
+
+    footer{
+      margin-top:18px;
+      padding:16px;
+      border-radius:var(--radius);
+      border:1px solid rgba(251,191,36,.3);
+      background:rgba(251,191,36,.12);
+      color:#FFE9A8;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Totally Legit Capital™</h1>
+          <div class="muted">Institutional vibes · zero credentials</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="parody">⚠️ PARODY · NOT REAL FINANCE</div>
+        <div class="pill">Market Status: Absolutely Up</div>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="card">
+        <div class="muted" style="font-family:var(--mono)">Portfolio Overview</div>
+        <h2 class="title">I shorted “Good Morning Uganda from America” and made millions.</h2>
+        <p class="subtitle">
+          A completely fake, satirical investment dashboard tracking the fictional downfall of
+          <strong>Good Morning Uganda from America</strong> — a Spotify podcast hosted by
+          <strong>Hunter Strawn, Logan Tibbits, and Michael Strawn</strong>, where friends get together
+          and just chit-chat about absolutely nothing.
+        </p>
+
+        <div class="grid">
+          <div class="metric">
+            <div class="label">
+              <span>Net Worth</span>
+              <span class="badge good">VERIFIED*</span>
+            </div>
+            <div class="value" id="net">$12,483,910.21</div>
+          </div>
+
+          <div class="metric">
+            <div class="label">
+              <span>Podcast Short Interest</span>
+              <span class="badge warn">LEGALISH</span>
+            </div>
+            <div class="value" id="short">420.69%</div>
+          </div>
+
+          <div class="metric">
+            <div class="label">
+              <span>Daily P&L</span>
+              <span class="badge bad">VOLATILE</span>
+            </div>
+            <div class="value" id="pnl">+$69,420.00</div>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn primary" onclick="recalc()">↻ Recalculate Gains</button>
+          <a class="btn" href="https://open.spotify.com/show/2LtuhlpZRS83QYg7chUEao" target="_blank">
+            🎧 Open Good Morning Uganda from America
+          </a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="muted" style="font-family:var(--mono)">Positions</div>
+        <table>
+          <tr>
+            <td><strong>PODCST</strong></td>
+            <td>Good Morning Uganda from America</td>
+            <td>-10,000 shares</td>
+            <td style="color:var(--good)">+$8,888,888</td>
+          </tr>
+          <tr>
+            <td><strong>SILNCE</strong></td>
+            <td>They stopped recording</td>
+            <td>∞ contracts</td>
+            <td style="color:var(--good)">+$3,141,592</td>
+          </tr>
+          <tr>
+            <td><strong>HYPE</strong></td>
+            <td>Launch Week Energy</td>
+            <td>1 can</td>
+            <td style="color:var(--bad)">-$12.99</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <footer>
+      <strong>PARODY DISCLAIMER:</strong>
+      This website is satire for entertainment only. It is not a financial institution, does not
+      offer investment services, and no one has ever shorted a podcast.
+      All numbers are fictional. Do not use this to mislead anyone.
+      <br><br>
+      *“Verified” means I verified that I typed the numbers myself.
+    </footer>
+  </div>
+
+  <script>
+    function money(n){
+      return (n>=0?"+":"-") + "$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2});
+    }
+
+    function recalc(){
+      document.getElementById("net").textContent =
+        "$" + (8000000 + Math.random()*12000000).toLocaleString(undefined,{minimumFractionDigits:2});
+      document.getElementById("short").textContent =
+        (200 + Math.random()*600).toFixed(2) + "%";
+      document.getElementById("pnl").textContent =
+        money(Math.random()*150000 - 20000);
+    }
+  </script>
+</body>
+</html>
