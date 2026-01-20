@@ -3,14 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Totally Legit Capital™ | Parody Finance Terminal</title>
-
+  <title>Totally Legit Capital™ | Parody Terminal</title>
   <style>
     :root{
-      --bg:#070A12;
-      --panel:#0E1325;
-      --panel2:#0B1020;
-      --text:#E7ECFF;
+      --bg:#060812;
+      --panel:#0C1226;
+      --panel2:#0A1021;
+      --text:#EAF0FF;
       --muted:#A7B0D8;
       --accent:#6EE7FF;
       --accent2:#A78BFA;
@@ -18,10 +17,10 @@
       --warn:#FBBF24;
       --bad:#FB7185;
       --border:rgba(231,236,255,.08);
-      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --shadow:0 14px 40px rgba(0,0,0,.35);
       --radius:18px;
-      --mono:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      --sans:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
     *{box-sizing:border-box}
@@ -30,186 +29,315 @@
       font-family:var(--sans);
       color:var(--text);
       background:
-        radial-gradient(1000px 600px at 15% 0%, rgba(167,139,250,.18), transparent 50%),
+        radial-gradient(1000px 600px at 15% 0%, rgba(167,139,250,.18), transparent 55%),
         radial-gradient(900px 600px at 85% 10%, rgba(110,231,255,.18), transparent 55%),
-        linear-gradient(180deg,#050713,#070A12 40%,#050713);
+        linear-gradient(180deg,#040613,#060812 45%,#040613);
+      min-height:100vh;
     }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
 
-    .wrap{max-width:1180px;margin:0 auto;padding:24px}
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding:16px 18px;
+    .wrap{max-width:1240px;margin:0 auto;padding:18px 18px 40px}
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      padding:14px 16px;
       border:1px solid var(--border);
       border-radius:var(--radius);
-      background:rgba(14,19,37,.9);
+      background:rgba(12,18,38,.85);
       box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+      position:sticky; top:14px; z-index:30;
     }
-
-    .brand{display:flex;gap:12px;align-items:center}
+    .brand{display:flex; gap:12px; align-items:center}
     .logo{
       width:42px;height:42px;border-radius:14px;
       background:conic-gradient(from 220deg,var(--accent),var(--accent2),var(--accent));
+      box-shadow: 0 0 0 2px rgba(231,236,255,.08), 0 12px 25px rgba(110,231,255,.10);
     }
-    h1{margin:0;font-size:14px;text-transform:uppercase;letter-spacing:.6px}
-    .muted{color:var(--muted)}
-
+    .brand h1{
+      margin:0; font-size:13px; text-transform:uppercase; letter-spacing:.7px;
+    }
+    .brand .sub{
+      margin-top:2px; color:var(--muted); font-size:12px; font-family:var(--mono);
+    }
+    .right{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;
+    }
     .pill{
       padding:8px 12px;
       border-radius:999px;
       border:1px solid var(--border);
-      background:rgba(7,10,18,.4);
+      background:rgba(6,8,18,.4);
       font-size:12px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      white-space:nowrap;
     }
-
     .parody{
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(251,191,36,.3);
-      background:rgba(251,191,36,.12);
-      font-size:12px;
+      border:1px solid rgba(251,191,36,.28);
+      background:rgba(251,191,36,.10);
       color:#FFE9A8;
+      font-size:12px;
+      white-space:nowrap;
     }
+    .dot{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--good);box-shadow:0 0 0 3px rgba(52,211,153,.15);margin-right:8px;vertical-align:middle}
 
-    .hero{
-      margin-top:18px;
-      display:grid;
-      grid-template-columns:1.25fr .75fr;
-      gap:16px;
-    }
-
-    .card{
-      padding:18px;
-      border-radius:var(--radius);
+    .ticker{
+      margin-top:12px;
       border:1px solid var(--border);
-      background:rgba(14,19,37,.85);
-      box-shadow:var(--shadow);
+      border-radius:14px;
+      overflow:hidden;
+      background:rgba(10,16,33,.75);
+      box-shadow: 0 12px 30px rgba(0,0,0,.22);
     }
-
-    .title{font-size:28px;margin:10px 0}
-    .subtitle{font-size:14px;color:var(--muted);line-height:1.6}
+    .ticker .marquee{
+      display:flex;
+      gap:18px;
+      padding:10px 14px;
+      font-family:var(--mono);
+      font-size:12px;
+      white-space:nowrap;
+      animation: scroll 26s linear infinite;
+    }
+    @keyframes scroll{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(-50%); }
+    }
+    .titem{opacity:.92}
+    .pos{color:#BFF7E3}
+    .neg{color:#FFD0D9}
+    .neu{color:#FFE9A8}
 
     .grid{
+      margin-top:14px;
       display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:12px;
-      margin-top:16px;
+      grid-template-columns: 1.35fr .65fr;
+      gap:14px;
     }
-
-    .metric{
-      padding:14px;
-      border-radius:14px;
+    .card{
       border:1px solid var(--border);
-      background:rgba(7,10,18,.4);
+      border-radius:var(--radius);
+      background:rgba(12,18,38,.82);
+      box-shadow:var(--shadow);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
     }
-
-    .label{
-      display:flex;
-      justify-content:space-between;
-      font-size:12px;
+    .card:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(520px 220px at 10% 0%, rgba(110,231,255,.14), transparent 60%),
+        radial-gradient(520px 220px at 90% 10%, rgba(167,139,250,.12), transparent 62%);
+      pointer-events:none;
+    }
+    .card>*{position:relative}
+    .kicker{
+      font-family:var(--mono);
       color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .title{
+      margin:10px 0 0;
+      font-size:26px;
+      letter-spacing:-.4px;
+      line-height:1.15;
+    }
+    .subtitle{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      max-width: 70ch;
     }
 
-    .value{
+    .metrics{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+    }
+    .metric{
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(6,8,18,.35);
+      padding:12px;
+    }
+    .metric .label{
+      display:flex; justify-content:space-between; gap:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .badge{
+      font-size:11px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(231,236,255,.05);
+      white-space:nowrap;
+    }
+    .badge.good{border-color:rgba(52,211,153,.22); background:rgba(52,211,153,.10); color:#BFF7E3}
+    .badge.warn{border-color:rgba(251,191,36,.25); background:rgba(251,191,36,.10); color:#FFE9A8}
+    .badge.bad{border-color:rgba(251,113,133,.25); background:rgba(251,113,133,.10); color:#FFD0D9}
+
+    .metric .value{
       margin-top:8px;
       font-family:var(--mono);
       font-size:18px;
     }
 
-    .badge{
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:11px;
-      border:1px solid var(--border);
+    .actions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
     }
-
-    .good{color:#BFF7E3;border-color:rgba(52,211,153,.3)}
-    .warn{color:#FFE9A8;border-color:rgba(251,191,36,.3)}
-    .bad{color:#FFD0D9;border-color:rgba(251,113,133,.3)}
-
-    .buttons{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
     .btn{
-      padding:10px 14px;
-      border-radius:14px;
       border:1px solid var(--border);
       background:rgba(231,236,255,.06);
       color:var(--text);
-      cursor:pointer;
+      padding:10px 12px;
+      border-radius:14px;
       font-size:13px;
-      text-decoration:none;
+      cursor:pointer;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
     }
     .btn.primary{
-      background:linear-gradient(90deg,rgba(110,231,255,.2),rgba(167,139,250,.2));
+      background:linear-gradient(90deg,rgba(110,231,255,.16),rgba(167,139,250,.18));
+      border-color:rgba(110,231,255,.22);
+    }
+    .btn:hover{filter:brightness(1.05)}
+    .btn:active{transform:translateY(1px)}
+
+    .chartWrap{
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:rgba(6,8,18,.35);
+      overflow:hidden;
+    }
+    .chartHeader{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(231,236,255,.06);
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .chartHeader strong{color:var(--text); font-weight:600}
+    canvas{display:block; width:100%; height:240px}
+
+    .sideBlock{
+      display:grid;
+      gap:12px;
+    }
+    .panelTitle{
+      margin:8px 0 0;
+      font-size:14px;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      color:var(--muted);
     }
 
-    table{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:12px;font-size:13px}
-    tr{background:rgba(7,10,18,.4);border:1px solid var(--border)}
-    td{padding:12px}
+    .list{
+      margin-top:10px;
+      display:grid;
+      gap:10px;
+      font-size:13px;
+    }
+    .item{
+      padding:12px;
+      border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(6,8,18,.35);
+    }
+    .item .top{
+      display:flex; justify-content:space-between; gap:12px;
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .item .main{
+      margin-top:6px;
+      line-height:1.5;
+    }
+    .mono{font-family:var(--mono)}
 
     footer{
-      margin-top:18px;
-      padding:16px;
+      margin-top:14px;
       border-radius:var(--radius);
-      border:1px solid rgba(251,191,36,.3);
-      background:rgba(251,191,36,.12);
+      border:1px solid rgba(251,191,36,.26);
+      background:rgba(251,191,36,.10);
       color:#FFE9A8;
+      padding:14px 16px;
       font-size:12px;
-      line-height:1.6;
+      line-height:1.55;
+      box-shadow:var(--shadow);
     }
 
-    @media(max-width:900px){
-      .hero{grid-template-columns:1fr}
+    @media(max-width:980px){
       .grid{grid-template-columns:1fr}
+      .metrics{grid-template-columns:1fr}
+      .topbar{position:relative; top:auto}
+      canvas{height:220px}
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <header>
+    <div class="topbar">
       <div class="brand">
-        <div class="logo"></div>
+        <div class="logo" aria-hidden="true"></div>
         <div>
           <h1>Totally Legit Capital™</h1>
-          <div class="muted">Institutional vibes · zero credentials</div>
+          <div class="sub">Parody terminal • institutional-grade nonsense</div>
         </div>
       </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <div class="parody">⚠️ PARODY · NOT REAL FINANCE</div>
-        <div class="pill">Market Status: Absolutely Up</div>
+      <div class="right">
+        <div class="parody">⚠️ PARODY • NOT REAL FINANCE</div>
+        <div class="pill"><span class="dot"></span>LIVE: “Absolutely Up”</div>
+        <div class="pill mono" id="clock">--:--:--</div>
       </div>
-    </header>
+    </div>
 
-    <div class="hero">
+    <div class="ticker" aria-label="ticker tape">
+      <div class="marquee" id="marquee">
+        <!-- populated by JS (duplicated for seamless scroll) -->
+      </div>
+    </div>
+
+    <div class="grid">
       <div class="card">
-        <div class="muted" style="font-family:var(--mono)">Portfolio Overview</div>
-        <h2 class="title">I shorted “Good Morning Uganda from America” and made millions.</h2>
-        <p class="subtitle">
-          A completely fake, satirical investment dashboard tracking the fictional downfall of
-          <strong>Good Morning Uganda from America</strong> — a Spotify podcast hosted by
-          <strong>Hunter Strawn, Logan Tibbits, and Michael Strawn</strong>, where friends get together
-          and just chit-chat about absolutely nothing.
-        </p>
+        <div class="kicker">Portfolio Overview</div>
+        <div class="title">Short Book: “Good Morning Uganda from America”</div>
+        <div class="subtitle">
+          Satirical dashboard tracking fictional returns from “shorting” a Spotify show.
+          Podcast hosted by <strong>Hunter Strawn</strong>, <strong>Logan Tibbits</strong>, and <strong>Michael Strawn</strong> —
+          friends who just chit-chat about life, nothing, and whatever comes to mind.
+        </div>
 
-        <div class="grid">
+        <div class="metrics">
           <div class="metric">
             <div class="label">
-              <span>Net Worth</span>
+              <span>Net Worth (Definitely Real)</span>
               <span class="badge good">VERIFIED*</span>
             </div>
-            <div class="value" id="net">$12,483,910.21</div>
+            <div class="value" id="netWorth">$12,483,910.21</div>
           </div>
-
           <div class="metric">
             <div class="label">
               <span>Podcast Short Interest</span>
               <span class="badge warn">LEGALISH</span>
             </div>
-            <div class="value" id="short">420.69%</div>
+            <div class="value" id="shortInterest">420.69%</div>
           </div>
-
           <div class="metric">
             <div class="label">
               <span>Daily P&L</span>
@@ -219,62 +347,300 @@
           </div>
         </div>
 
-        <div class="buttons">
-          <button class="btn primary" onclick="recalc()">↻ Recalculate Gains</button>
-          <a class="btn" href="https://open.spotify.com/show/2LtuhlpZRS83QYg7chUEao" target="_blank">
-            🎧 Open Good Morning Uganda from America
+        <div class="actions">
+          <button class="btn primary" id="recalc">↻ Recalculate</button>
+          <a class="btn" href="https://open.spotify.com/show/2LtuhlpZRS83QYg7chUEao" target="_blank" rel="noreferrer">
+            🎧 Open on Spotify
           </a>
+          <a class="btn" href="./sec.html">📄 SEC Filings (Parody)</a>
+          <button class="btn" id="copyDisclaimer">⧉ Copy Disclaimer</button>
+        </div>
+
+        <div class="chartWrap">
+          <div class="chartHeader">
+            <div><strong>PODCST</strong> · 1D · “Price” (fictional)</div>
+            <div class="mono" id="chartStat">Vol: 0 • Halted: Yes</div>
+          </div>
+          <canvas id="chart" width="1200" height="520"></canvas>
+        </div>
+
+        <div class="subtitle" style="margin-top:10px">
+          <span class="mono">Terminal Note:</span> This is just a joke.
         </div>
       </div>
 
-      <div class="card">
-        <div class="muted" style="font-family:var(--mono)">Positions</div>
-        <table>
-          <tr>
-            <td><strong>PODCST</strong></td>
-            <td>Good Morning Uganda from America</td>
-            <td>-10,000 shares</td>
-            <td style="color:var(--good)">+$8,888,888</td>
-          </tr>
-          <tr>
-            <td><strong>SILNCE</strong></td>
-            <td>They stopped recording</td>
-            <td>∞ contracts</td>
-            <td style="color:var(--good)">+$3,141,592</td>
-          </tr>
-          <tr>
-            <td><strong>HYPE</strong></td>
-            <td>Launch Week Energy</td>
-            <td>1 can</td>
-            <td style="color:var(--bad)">-$12.99</td>
-          </tr>
-        </table>
+      <div class="sideBlock">
+        <div class="card">
+          <div class="kicker">Headlines</div>
+          <div class="panelTitle">Market News</div>
+          <div class="list" id="headlines">
+            <!-- filled by JS -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="kicker">Positions</div>
+          <div class="panelTitle">Holdings & “Derivatives”</div>
+          <div class="list">
+            <div class="item">
+              <div class="top"><span class="mono">PODCST</span><span class="pos mono">+$8,888,888</span></div>
+              <div class="main">Short: Good Morning Uganda from America (fictional instrument)</div>
+            </div>
+            <div class="item">
+              <div class="top"><span class="mono">SILNCE</span><span class="pos mono">+$3,141,592</span></div>
+              <div class="main">Long: They stopped recording (the perfect catalyst)</div>
+            </div>
+            <div class="item">
+              <div class="top"><span class="mono">HYPE</span><span class="neg mono">-$12.99</span></div>
+              <div class="main">Expense: “Launch Week Energy” beverage</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <footer>
-      <strong>PARODY DISCLAIMER:</strong>
-      This website is satire for entertainment only. It is not a financial institution, does not
-      offer investment services, and no one has ever shorted a podcast.
-      All numbers are fictional. Do not use this to mislead anyone.
+      <strong>PARODY DISCLAIMER:</strong> This website is satire for entertainment only. It is not a real brokerage,
+      not investment advice, and you cannot “short” a podcast. All numbers and charts are fictional.
       <br><br>
-      *“Verified” means I verified that I typed the numbers myself.
+      *“Verified” means I verified I typed the numbers.
     </footer>
   </div>
 
   <script>
-    function money(n){
-      return (n>=0?"+":"-") + "$" + Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2});
+    // ---------- Clock ----------
+    const clockEl = document.getElementById("clock");
+    function tick(){
+      clockEl.textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"});
+    }
+    setInterval(tick, 250); tick();
+
+    // ---------- Ticker tape ----------
+    const tape = [
+      {t:"PODCST", p:"+12.4%", cls:"pos"},
+      {t:"SILNCE", p:"+999.0%", cls:"pos"},
+      {t:"HYPE", p:"-2.1%", cls:"neg"},
+      {t:"VIBES", p:"+0.7%", cls:"pos"},
+      {t:"REGUL8", p:"HALTED", cls:"neu"},
+      {t:"CRINGE", p:"+4.2%", cls:"pos"},
+      {t:"EGO", p:"-0.3%", cls:"neg"},
+      {t:"NFA", p:"NOT FIN. ADVICE", cls:"neu"},
+    ];
+    function buildMarquee(){
+      const parts = tape.map(x => `<span class="titem"><span class="mono">${x.t}</span> <span class="${x.cls} mono">${x.p}</span></span>`);
+      // duplicate content for seamless scroll
+      document.getElementById("marquee").innerHTML = parts.join(" · ") + " · " + parts.join(" · ");
+    }
+    buildMarquee();
+
+    // ---------- Headlines ----------
+    const headlines = [
+      {time:"08:14", tag:"ALGO", text:"Models confirm: ‘friends talking’ remains illiquid asset class."},
+      {time:"09:02", tag:"EARN", text:"Earnings call canceled due to ‘we are tired’ (unconfirmed)."},
+      {time:"10:37", tag:"HALT", text:"PODCST halted pending ‘new episode’ (no ETA)."},
+      {time:"11:11", tag:"MACRO", text:"Rates unchanged; vibes stronger than fundamentals."},
+      {time:"12:28", tag:"RISK", text:"Risk team files report titled ‘This Is A Joke, Right?’"},
+    ];
+    const hl = document.getElementById("headlines");
+    hl.innerHTML = headlines.map(h => `
+      <div class="item">
+        <div class="top"><span>${h.time} · <span class="mono">${h.tag}</span></span><span class="mono muted">Wire</span></div>
+        <div class="main">${h.text}</div>
+      </div>
+    `).join("");
+
+    // ---------- Fake numbers ----------
+    const netWorthEl = document.getElementById("netWorth");
+    const pnlEl = document.getElementById("pnl");
+    const shortEl = document.getElementById("shortInterest");
+    const statEl = document.getElementById("chartStat");
+
+    function money(x){
+      const sign = x < 0 ? "-" : "+";
+      const abs = Math.abs(x);
+      return `${sign}$${abs.toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`;
     }
 
-    function recalc(){
-      document.getElementById("net").textContent =
-        "$" + (8000000 + Math.random()*12000000).toLocaleString(undefined,{minimumFractionDigits:2});
-      document.getElementById("short").textContent =
-        (200 + Math.random()*600).toFixed(2) + "%";
-      document.getElementById("pnl").textContent =
-        money(Math.random()*150000 - 20000);
+    // ---------- Bloomberg-style chart (canvas) ----------
+    const canvas = document.getElementById("chart");
+    const ctx = canvas.getContext("2d");
+
+    function randn(){
+      // simple-ish pseudo normal
+      let u = 0, v = 0;
+      while(u === 0) u = Math.random();
+      while(v === 0) v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
     }
+
+    function makeSeries(n=180){
+      // mean-reverting random walk to look "market-y"
+      let price = 102.0;
+      let drift = -0.002; // "downtrend" for the joke
+      const out = [];
+      for(let i=0;i<n;i++){
+        const shock = randn()*0.8;
+        const revert = (102 - price)*0.02;
+        price = Math.max(12, price + drift + shock + revert);
+        out.push(price);
+      }
+      return out;
+    }
+
+    function drawChart(series){
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0,0,w,h);
+
+      // background
+      ctx.fillStyle = "rgba(6,8,18,0.0)";
+      ctx.fillRect(0,0,w,h);
+
+      // grid
+      const padL=56, padR=20, padT=20, padB=44;
+      const gw = w - padL - padR;
+      const gh = h - padT - padB;
+
+      ctx.strokeStyle = "rgba(231,236,255,0.08)";
+      ctx.lineWidth = 1;
+
+      const rows = 6, cols = 8;
+      for(let r=0;r<=rows;r++){
+        const y = padT + (gh/rows)*r;
+        ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+gw,y); ctx.stroke();
+      }
+      for(let c=0;c<=cols;c++){
+        const x = padL + (gw/cols)*c;
+        ctx.beginPath(); ctx.moveTo(x,padT); ctx.lineTo(x,padT+gh); ctx.stroke();
+      }
+
+      // scale
+      const min = Math.min(...series), max = Math.max(...series);
+      const yFor = v => padT + (max - v) / (max - min + 1e-9) * gh;
+
+      // axis labels (minimal terminal style)
+      ctx.fillStyle = "rgba(167,176,216,0.95)";
+      ctx.font = "12px " + getComputedStyle(document.documentElement).getPropertyValue('--mono');
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      for(let r=0;r<=rows;r++){
+        const v = max - (max-min)*(r/rows);
+        const y = padT + (gh/rows)*r;
+        ctx.fillText(v.toFixed(1), padL-10, y);
+      }
+
+      // line + glow
+      const xStep = gw / (series.length - 1);
+      const line = () => {
+        ctx.beginPath();
+        series.forEach((v,i)=>{
+          const x = padL + i*xStep;
+          const y = yFor(v);
+          if(i===0) ctx.moveTo(x,y);
+          else ctx.lineTo(x,y);
+        });
+      };
+
+      // glow
+      ctx.strokeStyle = "rgba(110,231,255,0.14)";
+      ctx.lineWidth = 8;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      line(); ctx.stroke();
+
+      // main line
+      ctx.strokeStyle = "rgba(110,231,255,0.85)";
+      ctx.lineWidth = 2;
+      line(); ctx.stroke();
+
+      // fill under line (subtle)
+      const grad = ctx.createLinearGradient(0,padT,0,padT+gh);
+      grad.addColorStop(0,"rgba(110,231,255,0.12)");
+      grad.addColorStop(1,"rgba(167,139,250,0.03)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      series.forEach((v,i)=>{
+        const x = padL + i*xStep;
+        const y = yFor(v);
+        if(i===0) ctx.moveTo(x,y);
+        else ctx.lineTo(x,y);
+      });
+      ctx.lineTo(padL+gw, padT+gh);
+      ctx.lineTo(padL, padT+gh);
+      ctx.closePath();
+      ctx.fill();
+
+      // last price marker
+      const last = series[series.length-1];
+      const lx = padL + (series.length-1)*xStep;
+      const ly = yFor(last);
+      ctx.fillStyle = "rgba(110,231,255,0.95)";
+      ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI*2); ctx.fill();
+
+      // "terminal footer"
+      ctx.fillStyle = "rgba(167,176,216,0.85)";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText("Source: vibes • feed: imagination • instrument: PODCST (fictional)", padL, h-16);
+    }
+
+    let series = makeSeries();
+    drawChart(series);
+    updateStats(series);
+
+    function updateStats(s){
+      const last = s[s.length-1];
+      const first = s[0];
+      const chg = ((last-first)/first)*100;
+      const vol = Math.floor(1000 + Math.random()*9000);
+      statEl.textContent = `Vol: ${vol.toLocaleString()} • Chg: ${chg.toFixed(2)}% • Halted: Yes`;
+    }
+
+    // ---------- Recalc ----------
+    document.getElementById("recalc").addEventListener("click", () => {
+      const base = 8_000_000 + Math.random()*10_000_000;
+      const cents = Math.random();
+      netWorthEl.textContent = `$${(base + cents).toLocaleString(undefined,{minimumFractionDigits:2, maximumFractionDigits:2})}`;
+
+      const pnl = (Math.random()*160000 - 20000);
+      pnlEl.textContent = money(pnl);
+
+      const si = (200 + Math.random()*600).toFixed(2);
+      shortEl.textContent = `${si}%`;
+
+      series = makeSeries();
+      drawChart(series);
+      updateStats(series);
+    });
+
+    // ---------- Copy disclaimer ----------
+    document.getElementById("copyDisclaimer").addEventListener("click", async () => {
+      const text = "PARODY: This site is satire for entertainment only. Not a real finance service or advice. Charts/numbers are fictional.";
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Copied parody disclaimer ✅");
+      }catch{
+        prompt("Copy this disclaimer:", text);
+      }
+    });
+
+    // ---------- Responsive canvas crispness ----------
+    function resizeCanvas(){
+      // keep internal resolution high for crisp lines
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const wrap = canvas.parentElement.getBoundingClientRect();
+      const cssW = Math.floor(wrap.width);
+      const cssH = 240; // matches CSS height (approx); we draw at higher res anyway
+      canvas.style.height = cssH + "px";
+      canvas.style.width = cssW + "px";
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0); // draw in CSS pixels
+      // re-render
+      drawChart(series);
+      updateStats(series);
+    }
+    window.addEventListener("resize", resizeCanvas);
+    setTimeout(resizeCanvas, 50);
   </script>
 </body>
 </html>
