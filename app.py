@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import json
 import random
 from datetime import datetime
+from pathlib import Path
 
 from flask import Flask, jsonify, redirect, render_template, url_for
 
 app = Flask(__name__)
+DATA_DIR = Path(__file__).parent / "data"
+RELEASES_FILE = DATA_DIR / "podcast_releases.json"
 
 
 HEADLINES = [
@@ -38,6 +42,19 @@ def make_series(points: int = 64) -> list[float]:
     return out
 
 
+def make_crash_series(points: int = 64) -> list[float]:
+    price = 103.0
+    out = []
+    drop_idx = int(points * 0.35)
+    for i in range(points):
+        if i == drop_idx:
+            price *= random.uniform(0.18, 0.32)
+        else:
+            price = max(0.5, price + random.uniform(-1.4, 0.35))
+        out.append(round(price, 2))
+    return out
+
+
 def make_metrics() -> dict:
     net = 8_000_000 + random.random() * 9_000_000
     pnl = random.uniform(-40_000, 160_000)
@@ -49,6 +66,50 @@ def make_metrics() -> dict:
     }
 
 
+def make_crash_metrics() -> dict:
+    net = random.uniform(41.0, 5999.0)
+    pnl = random.uniform(-8_500_000, -2_100_000)
+    short_interest = random.uniform(0.01, 3.5)
+    return {
+        "net_worth": f"${net:,.2f}",
+        "pnl": f"-${abs(pnl):,.2f}",
+        "short_interest": f"{short_interest:.2f}%",
+    }
+
+
+def load_releases() -> list[dict]:
+    if not RELEASES_FILE.exists():
+        return []
+    try:
+        raw = json.loads(RELEASES_FILE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return []
+    if not isinstance(raw, list):
+        return []
+
+    cleaned = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        title = str(item.get("title", "")).strip()
+        date = str(item.get("date", "")).strip()
+        if not title or not date:
+            continue
+        cleaned.append({"title": title, "date": date})
+    return cleaned
+
+
+def build_terminal_state() -> dict:
+    releases = load_releases()
+    latest_release = releases[-1] if releases else None
+    crash_mode = bool(latest_release)
+    return {
+        "crash_mode": crash_mode,
+        "latest_release": latest_release,
+        "metrics": make_crash_metrics() if crash_mode else make_metrics(),
+    }
+
+
 @app.context_processor
 def global_context():
     return {"now": datetime.now(), "ticker": TICKER}
@@ -56,6 +117,7 @@ def global_context():
 
 @app.get("/")
 def index():
+    state = build_terminal_state()
     seeded = [
         {"time": "08:14", "tag": "ALGO", "text": HEADLINES[0][1]},
         {"time": "09:02", "tag": "EARN", "text": HEADLINES[1][1]},
@@ -63,9 +125,10 @@ def index():
     ]
     return render_template(
         "index.html",
-        metrics=make_metrics(),
+        metrics=state["metrics"],
         headlines=seeded,
-        chart_series=make_series(),
+        chart_series=make_crash_series() if state["crash_mode"] else make_series(),
+        app_state=state,
     )
 
 
@@ -123,7 +186,15 @@ def transcript_html():
 
 @app.get("/api/recalc")
 def recalc():
-    return jsonify({"metrics": make_metrics(), "series": make_series()})
+    state = build_terminal_state()
+    return jsonify(
+        {
+            "crash_mode": state["crash_mode"],
+            "latest_release": state["latest_release"],
+            "metrics": state["metrics"],
+            "series": make_crash_series() if state["crash_mode"] else make_series(),
+        }
+    )
 
 
 @app.get("/api/news")
