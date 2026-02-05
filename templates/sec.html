@@ -1,30 +1,399 @@
-{% extends "base.html" %}
-{% block title %}TLC SEC Filings{% endblock %}
-{% block content %}
-<section class="hero-card">
-  <p class="eyebrow">SEC-ish Portal</p>
-  <h2>Fictional Filings for PODCST</h2>
-  <p class="muted">These are parody entries. Nothing below is an actual filing.</p>
-</section>
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Totally Legit Capital™ | SEC Filings (Parody)</title>
+  <style>
+    :root{
+      --bg:#060812;
+      --panel:#0C1226;
+      --text:#EAF0FF;
+      --muted:#A7B0D8;
+      --accent:#6EE7FF;
+      --accent2:#A78BFA;
+      --warn:#FBBF24;
+      --border:rgba(231,236,255,.08);
+      --shadow:0 14px 40px rgba(0,0,0,.35);
+      --radius:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 15% 0%, rgba(167,139,250,.18), transparent 55%),
+        radial-gradient(900px 600px at 85% 10%, rgba(110,231,255,.18), transparent 55%),
+        linear-gradient(180deg,#040613,#060812 45%,#040613);
+      min-height:100vh;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 18px 40px}
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+      padding:14px 16px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:rgba(12,18,38,.85);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background:conic-gradient(from 220deg,var(--accent),var(--accent2),var(--accent));
+      box-shadow: 0 0 0 2px rgba(231,236,255,.08), 0 12px 25px rgba(110,231,255,.10);
+    }
+    h1{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.7px}
+    .sub{margin-top:2px;color:var(--muted);font-size:12px;font-family:var(--mono)}
+    .right{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
+    .parody{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(251,191,36,.28);
+      background:rgba(251,191,36,.10);
+      color:#FFE9A8;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(6,8,18,.4);
+      font-size:12px;
+      box-shadow: 0 10px 22px rgba(0,0,0,.18);
+      white-space:nowrap;
+      font-family:var(--mono);
+      color:var(--muted);
+    }
 
-<section class="panel">
-  <table class="filings">
-    <thead>
-      <tr>
-        <th>Form</th>
-        <th>Date</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for filing in filings %}
-      <tr>
-        <td><span class="pill">{{ filing.form }}</span></td>
-        <td class="mono">{{ filing.date }}</td>
-        <td>{{ filing.description }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</section>
-{% endblock %}
+    .card{
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      background:rgba(12,18,38,.82);
+      box-shadow:var(--shadow);
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(520px 220px at 10% 0%, rgba(110,231,255,.14), transparent 60%),
+        radial-gradient(520px 220px at 90% 10%, rgba(167,139,250,.12), transparent 62%);
+      pointer-events:none;
+    }
+    .card>*{position:relative}
+    .kicker{
+      font-family:var(--mono);
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .title{
+      margin:10px 0 0;
+      font-size:22px;
+      letter-spacing:-.3px;
+    }
+    .subtitle{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.6;
+      max-width: 80ch;
+    }
+    .btnRow{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:rgba(231,236,255,.06);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:13px;
+      cursor:pointer;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .filings{
+      margin-top:14px;
+      border:1px solid rgba(231,236,255,.06);
+      border-radius:16px;
+      overflow:hidden;
+      background:rgba(6,8,18,.35);
+    }
+    .filingsHeader{
+      padding:10px 12px;
+      border-bottom:1px solid rgba(231,236,255,.06);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+    }
+    th, td{
+      padding:12px;
+      border-bottom:1px solid rgba(231,236,255,.06);
+      vertical-align:top;
+    }
+    th{
+      text-align:left;
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      background:rgba(6,8,18,.25);
+    }
+    .tag{
+      display:inline-block;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(251,191,36,.25);
+      background:rgba(251,191,36,.10);
+      color:#FFE9A8;
+      font-size:11px;
+      font-family:var(--mono);
+      white-space:nowrap;
+    }
+    .mono{font-family:var(--mono)}
+    .small{font-size:12px;color:var(--muted);line-height:1.6}
+    details{
+      margin-top:14px;
+      border:1px solid rgba(231,236,255,.06);
+      border-radius:16px;
+      background:rgba(6,8,18,.35);
+      padding:12px 12px;
+    }
+    summary{
+      cursor:pointer;
+      font-family:var(--mono);
+      color:var(--text);
+      font-size:12px;
+      letter-spacing:.2px;
+    }
+    .doc{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(231,236,255,.06);
+      background:rgba(12,18,38,.55);
+    }
+    .doc h3{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+    .doc p{margin:8px 0 0; color:var(--muted); font-size:13px; line-height:1.6}
+
+    footer{
+      margin-top:14px;
+      border-radius:var(--radius);
+      border:1px solid rgba(251,191,36,.26);
+      background:rgba(251,191,36,.10);
+      color:#FFE9A8;
+      padding:14px 16px;
+      font-size:12px;
+      line-height:1.55;
+      box-shadow:var(--shadow);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Totally Legit Capital™</h1>
+          <div class="sub">SEC Filings Portal (parody)</div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="parody">⚠️ PARODY • NOT REAL SEC FILINGS</div>
+        <div class="pill" id="asof">AS OF --</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="kicker">EDGAR-ish Filing Viewer</div>
+      <div class="title">Registrant: Totally Legit Capital™ (Not a Real Entity)</div>
+      <div class="subtitle">
+        This page is satire. These “filings” are fictional and exist only to make your friend laugh.
+        Don’t use this to mislead anyone.
+      </div>
+
+      <div class="btnRow">
+        <a class="btn" href="/">← Back to Terminal</a>
+        <a class="btn" href="https://open.spotify.com/show/2LtuhlpZRS83QYg7chUEao" target="_blank" rel="noreferrer">
+          🎧 Underlying “Asset” (Spotify)
+        </a>
+        <button class="btn" id="copy">⧉ Copy Parody Disclaimer</button>
+      </div>
+
+      <div class="filings">
+        <div class="filingsHeader">
+          <div><span class="mono">CIK:</span> 0000-LOL-420 · <span class="mono">Ticker:</span> PODCST</div>
+          <div><span class="mono">Exchange:</span> Group Chat · <span class="mono">Auditor:</span> “trust me bro”</div>
+        </div>
+
+        <table aria-label="filings table">
+          <thead>
+            <tr>
+              <th>Filing</th>
+              <th>Date</th>
+              <th>Description</th>
+              <th>Docs</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag">FORM POD-420</span></td>
+              <td class="mono">2026-01-20</td>
+              <td>
+                Notice of Material Event: “They stopped recording.”
+                <div class="small">Trigger: lack of episodes · Impact: infinite.</div>
+              </td>
+              <td class="mono"><a href="#pod420">open</a></td>
+            </tr>
+            <tr>
+              <td><span class="tag">10-Q (Vibes)</span></td>
+              <td class="mono">2026-01-19</td>
+              <td>
+                Quarterly Report: Cash flows, snack spend, and friendship goodwill.
+                <div class="small">Prepared under GAAP* (Generally Accepted Average Podcasting).</div>
+              </td>
+              <td class="mono"><a href="#tenq">open</a></td>
+            </tr>
+            <tr>
+              <td><span class="tag">8-K (Actually Kidding)</span></td>
+              <td class="mono">2026-01-18</td>
+              <td>
+                Current Report: “Shorting a podcast” confirmed to be impossible.
+                <div class="small">Filed after compliance asked, “why are you like this?”</div>
+              </td>
+              <td class="mono"><a href="#eightk">open</a></td>
+            </tr>
+            <tr>
+              <td><span class="tag">S-1 (Series of Jokes)</span></td>
+              <td class="mono">2026-01-17</td>
+              <td>
+                Registration Statement: Offer and sale of premium nonsense.
+                <div class="small">Proceeds intended for: burgers, mics, and ego.</div>
+              </td>
+              <td class="mono"><a href="#s1">open</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <details id="pod420" open>
+        <summary>FORM POD-420 — Material Event Disclosure (click to collapse)</summary>
+        <div class="doc">
+          <h3>Item 1.01 — Entry into a Material Silence Agreement</h3>
+          <p>
+            The “Issuer” hereby discloses that the underlying podcast
+            <strong>Good Morning Uganda from America</strong> (hosted by Hunter Strawn, Logan Tibbits, and Michael Strawn)
+            has entered a period of prolonged quietness, hereafter referred to as “The Hiatus.”
+          </p>
+          <p>
+            <strong>Forward-Looking Statements:</strong> Any statements regarding future episodes are forward-looking and
+            subject to risks including (a) naps, (b) life, (c) “we’ll record next week,” and (d) forgetting.
+          </p>
+          <p class="small">
+            *This document is parody and not real SEC content.
+          </p>
+        </div>
+        <div class="doc">
+          <h3>Exhibit 99.1 — Press Release</h3>
+          <p>
+            Totally Legit Capital™ announces record performance in its flagship strategy:
+            <em>Short Friends’ Podcasts (Not a Real Thing)</em>. Management credits success to “vibes,” “timing,” and “having no idea.”
+          </p>
+        </div>
+      </details>
+
+      <details id="tenq">
+        <summary>10-Q (Vibes) — Quarterly Report (click to expand)</summary>
+        <div class="doc">
+          <h3>Management Discussion & Analysis</h3>
+          <p>
+            During the quarter, the Company experienced strong imaginary gains due to a total absence of fundamentals.
+            Operating expenses increased due to snacks, caffeine, and repeated refreshes of Spotify.
+          </p>
+          <p>
+            <strong>Liquidity:</strong> Unlimited (in the imagination).<br/>
+            <strong>Revenue:</strong> $0.00 (real) and $12,000,000.00 (fake).
+          </p>
+        </div>
+      </details>
+
+      <details id="eightk">
+        <summary>8-K (Actually Kidding) — Current Report (click to expand)</summary>
+        <div class="doc">
+          <h3>Item 8.01 — Other Events</h3>
+          <p>
+            The Company confirms it cannot, has not, and will not short a podcast, because that is not how markets work.
+            This website exists solely to roast a friend in a responsible way.
+          </p>
+        </div>
+      </details>
+
+      <details id="s1">
+        <summary>S-1 (Series of Jokes) — Registration Statement (click to expand)</summary>
+        <div class="doc">
+          <h3>Use of Proceeds</h3>
+          <p>
+            Net proceeds from the offering will be used for: microphones we don’t need, merch nobody asked for,
+            and a premium “terminal theme” subscription (to ourselves).
+          </p>
+          <p class="small">
+            Risk Factors include: friends reading this and saying “bro,” embarrassment, and laughter.
+          </p>
+        </div>
+      </details>
+    </div>
+
+    <footer>
+      <strong>PARODY DISCLAIMER:</strong> This page is satire. It is not affiliated with the SEC or EDGAR and contains no real filings.
+      All entities, forms, and disclosures on this page are fictional.
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("asof").textContent =
+      "AS OF " + new Date().toLocaleString([], {year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit"});
+
+    document.getElementById("copy").addEventListener("click", async () => {
+      const text = "PARODY: This is a joke SEC-style page. Not real filings, not affiliated with the SEC/EDGAR.";
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Copied parody disclaimer ✅");
+      }catch{
+        prompt("Copy this disclaimer:", text);
+      }
+    });
+  </script>
+</body>
+</html>
+

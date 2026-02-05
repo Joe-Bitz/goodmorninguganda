@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 from datetime import datetime
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, redirect, render_template, url_for
 
 app = Flask(__name__)
 
@@ -69,9 +69,19 @@ def index():
     )
 
 
+@app.get("/index.html")
+def index_html():
+    return redirect(url_for("index"), code=302)
+
+
 @app.get("/research")
 def research():
     return render_template("research.html")
+
+
+@app.get("/research.html")
+def research_html():
+    return redirect(url_for("research"), code=302)
 
 
 @app.get("/sec")
@@ -96,9 +106,19 @@ def sec():
     return render_template("sec.html", filings=filings)
 
 
+@app.get("/sec.html")
+def sec_html():
+    return redirect(url_for("sec"), code=302)
+
+
 @app.get("/transcript")
 def transcript():
     return render_template("transcript.html")
+
+
+@app.get("/transcript.html")
+def transcript_html():
+    return redirect(url_for("transcript"), code=302)
 
 
 @app.get("/api/recalc")
