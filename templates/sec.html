@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}TLC SEC Filings{% endblock %}
+{% block content %}
+<section class="hero-card">
+  <p class="eyebrow">SEC-ish Portal</p>
+  <h2>Fictional Filings for PODCST</h2>
+  <p class="muted">These are parody entries. Nothing below is an actual filing.</p>
+</section>
+
+<section class="panel">
+  <table class="filings">
+    <thead>
+      <tr>
+        <th>Form</th>
+        <th>Date</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for filing in filings %}
+      <tr>
+        <td><span class="pill">{{ filing.form }}</span></td>
+        <td class="mono">{{ filing.date }}</td>
+        <td>{{ filing.description }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

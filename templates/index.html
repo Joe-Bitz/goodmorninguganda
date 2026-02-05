@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}TLC Terminal{% endblock %}
+{% block content %}
+<section class="ticker-row">
+  {% for item in ticker %}
+  <span class="ticker-item">
+    <strong>{{ item.symbol }}</strong>
+    <em class="{{ item.class }}">{{ item.value }}</em>
+  </span>
+  {% endfor %}
+</section>
+
+<section class="hero-card">
+  <p class="eyebrow">Portfolio Overview</p>
+  <h2>Short Book: Good Morning Uganda from America</h2>
+  <p class="muted">
+    Satirical terminal tracking fictional returns from "shorting" a podcast.
+    This app is now backed by Python, rendered with Jinja templates, and styled with shared CSS.
+  </p>
+
+  <div class="metric-grid" id="metrics">
+    <article class="metric">
+      <span>Net Worth</span>
+      <strong id="netWorth">{{ metrics.net_worth }}</strong>
+    </article>
+    <article class="metric">
+      <span>Podcast Short Interest</span>
+      <strong id="shortInterest">{{ metrics.short_interest }}</strong>
+    </article>
+    <article class="metric">
+      <span>Daily P and L</span>
+      <strong id="pnl">{{ metrics.pnl }}</strong>
+    </article>
+  </div>
+
+  <div class="action-row">
+    <button id="recalcBtn" class="btn primary">Recalculate</button>
+    <button id="newsBtn" class="btn">Breaking News</button>
+    <a class="btn" target="_blank" rel="noreferrer" href="https://open.spotify.com/show/2LtuhlpZRS83QYg7chUEao">Open Spotify</a>
+  </div>
+</section>
+
+<section class="layout-grid">
+  <article class="panel">
+    <div class="panel-top">
+      <p class="eyebrow">Chart</p>
+      <p class="muted mono">PODCST (fictional)</p>
+    </div>
+    <canvas id="chartCanvas" data-series='{{ chart_series | tojson }}' width="900" height="320"></canvas>
+  </article>
+
+  <article class="panel">
+    <p class="eyebrow">Headlines</p>
+    <div id="headlineList" class="headline-list">
+      {% for h in headlines %}
+      <article class="headline">
+        <header><span>{{ h.time }}</span><span class="mono">{{ h.tag }}</span></header>
+        <p>{{ h.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<div id="toast" class="toast" aria-live="polite"></div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}
