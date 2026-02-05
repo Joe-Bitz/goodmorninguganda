@@ -133,7 +133,7 @@
     .btn:hover{filter:brightness(1.05)}
     .btn:active{transform:translateY(1px)}
 
-    .chartWrap{margin-top:14px;border:1px solid var(--border);border-radius:16px;background:rgba(6,8,18,.35);overflow:hidden;}
+    .chartWrap{margin-top:14px;border:1px solid var(--border);border-radius:16px;background:rgba(6,8,18,.35);overflow:hidden;position:relative;}
     .chartHeader{
       display:flex;justify-content:space-between;align-items:center;gap:12px;
       padding:10px 12px;border-bottom:1px solid rgba(231,236,255,.06);
@@ -141,6 +141,13 @@
     }
     .chartHeader strong{color:var(--text);font-weight:600}
     canvas{display:block;width:100%;height:240px}
+    .haltStamp{
+      position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-8deg);
+      z-index:4;font-family:var(--mono);font-size:26px;letter-spacing:2px;
+      padding:10px 16px;border:2px solid rgba(255,84,84,.55);color:#FFC3C3;
+      background:rgba(46,8,8,.72);border-radius:8px;opacity:0;pointer-events:none;
+    }
+    .haltStamp.show{opacity:1}
 
     .sideBlock{display:grid;gap:12px;}
     .panelTitle{margin:8px 0 0;font-size:14px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);}
@@ -223,6 +230,12 @@
       color:#FFE9A8;
       font-size:12px;
       line-height:1.55;
+    }
+    .badgeRow{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
+    .award{
+      display:inline-block;padding:4px 9px;border-radius:999px;
+      font-size:11px;font-family:var(--mono);white-space:nowrap;
+      border:1px solid rgba(255,160,120,.35);background:rgba(255,120,62,.14);color:#FFD8C2;
     }
 
     /* Toasts */
@@ -344,6 +357,87 @@
       line-height:1.55;
     }
 
+    /* Crash mode visuals */
+    body.crash-mode{
+      background:
+        radial-gradient(1200px 700px at 50% 110%, rgba(255,110,32,.22), transparent 58%),
+        radial-gradient(900px 520px at 10% 0%, rgba(255,62,62,.20), transparent 60%),
+        radial-gradient(900px 520px at 85% 10%, rgba(255,160,64,.18), transparent 60%),
+        linear-gradient(180deg,#120608,#16090b 45%,#110609);
+    }
+    body.crash-mode .card{
+      border-color:rgba(255,124,84,.24);
+    }
+    body.crash-mode .parody{
+      border-color:rgba(255,124,84,.45);
+      background:rgba(255,124,84,.16);
+      color:#FFD4C6;
+    }
+    body.crash-mode .card,
+    body.crash-mode .ticker{animation:heatWobble 6.6s ease-in-out infinite}
+    .broadcast{
+      position:sticky;top:0;z-index:80;padding:10px 12px;text-align:center;
+      font-family:var(--mono);font-size:12px;letter-spacing:.6px;color:#FFE7D9;
+      background:linear-gradient(90deg,rgba(156,14,14,.95),rgba(228,79,24,.95),rgba(156,14,14,.95));
+      border-bottom:1px solid rgba(255,170,142,.45);animation:alarmPulse 1.1s steps(2,end) infinite;
+    }
+    .fire-overlay{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:6;
+      overflow:hidden;
+    }
+    .fire-glow{
+      position:absolute;
+      left:-6%;
+      right:-6%;
+      bottom:-12%;
+      height:48%;
+      background:
+        radial-gradient(55% 100% at 20% 100%, rgba(255,62,62,.35), transparent 65%),
+        radial-gradient(55% 100% at 50% 100%, rgba(255,120,52,.35), transparent 65%),
+        radial-gradient(55% 100% at 80% 100%, rgba(255,182,78,.30), transparent 65%);
+      filter: blur(14px);
+      animation: heatPulse 2.4s ease-in-out infinite alternate;
+    }
+    .flame{
+      position:absolute;
+      bottom:-14%;
+      width:44vmin;
+      height:70vmin;
+      border-radius:40% 60% 45% 55%;
+      background:
+        radial-gradient(52% 60% at 50% 78%, rgba(255,230,120,.56), rgba(255,146,68,.30) 55%, rgba(255,58,30,0) 78%);
+      filter: blur(8px);
+      opacity:.38;
+      transform-origin:50% 100%;
+      animation: flameRise 2.2s ease-in-out infinite;
+    }
+    .flame.a{left:-5%; animation-delay:0s}
+    .flame.b{left:28%; animation-delay:.6s}
+    .flame.c{left:62%; animation-delay:1.2s}
+    @keyframes flameRise{
+      0%{transform:translateY(16px) scale(1,.96) rotate(-3deg)}
+      50%{transform:translateY(-10px) scale(1.05,1.08) rotate(3deg)}
+      100%{transform:translateY(8px) scale(.98,1) rotate(-2deg)}
+    }
+    @keyframes heatPulse{
+      from{opacity:.62}
+      to{opacity:.95}
+    }
+    @keyframes heatWobble{
+      0%{transform:translateX(0) skewX(0deg)}
+      25%{transform:translateX(.8px) skewX(.15deg)}
+      50%{transform:translateX(-.8px) skewX(-.15deg)}
+      75%{transform:translateX(.5px) skewX(.1deg)}
+      100%{transform:translateX(0) skewX(0deg)}
+    }
+    @keyframes alarmPulse{
+      from{filter:saturate(1)}
+      to{filter:saturate(1.6) brightness(1.08)}
+    }
+
     @media(max-width:980px){
       .grid{grid-template-columns:1fr}
       .metrics{grid-template-columns:1fr}
@@ -355,7 +449,18 @@
   </style>
 </head>
 
-<body>
+<body class="{% if app_state.crash_mode %}crash-mode{% endif %}">
+  {% if app_state.crash_mode %}
+  <div class="fire-overlay" aria-hidden="true">
+    <div class="fire-glow"></div>
+    <div class="flame a"></div>
+    <div class="flame b"></div>
+    <div class="flame c"></div>
+  </div>
+  <div class="broadcast" id="broadcastBanner">
+    EMERGENCY BROADCAST: NEW EPISODE CONFIRMED • SHORT THESIS DESTROYED • SEEK EMOTIONAL HEDGE IMMEDIATELY
+  </div>
+  {% endif %}
   <!-- Fake login screen -->
   <div class="lock" id="lock">
     <div class="lockCard">
@@ -405,6 +510,7 @@
       <div class="right">
         <div class="parody">⚠️ PARODY • NOT REAL FINANCE</div>
         <div class="pill"><span class="dot"></span>LIVE: “Absolutely Up”</div>
+        <div class="pill mono" id="marginCallPill">Margin: Stable</div>
         <div class="pill mono" id="clock">--:--:--</div>
         <button class="pill" id="sfxToggle" title="Toggle sound effects">🔇 SFX</button>
       </div>
@@ -427,6 +533,12 @@
         <div class="riskBox" id="episodeCrashNote">
           <strong>EPISODE DROP DETECTED:</strong> "{{ app_state.latest_release.title }}" on {{ app_state.latest_release.date }}.
           Short thesis invalidated. Portfolio now in controlled demolition mode.
+        </div>
+        <div class="badgeRow">
+          <span class="award">Caught Holding the Bag</span>
+          <span class="award">Max Pain Candidate</span>
+          <span class="award">Diamond Delusion</span>
+          <span class="award">Guidance Ignored</span>
         </div>
         {% endif %}
 
@@ -465,6 +577,11 @@
           <button class="btn" id="openTicket">🧾 Order Ticket</button>
           <button class="btn" id="openSearch">⌕ Search</button>
           <button class="btn" id="openHelp">?</button>
+          {% if app_state.crash_mode %}
+          <button class="btn" id="replayCrash">⏪ Crash Replay</button>
+          <button class="btn" id="downloadCert">🪦 Death Certificate</button>
+          <button class="btn" id="shareMeltdown">🔗 Share Meltdown</button>
+          {% endif %}
         </div>
 
         <div class="chartWrap">
@@ -472,6 +589,7 @@
             <div><strong>PODCST</strong> · 1D · “Price” (fictional)</div>
             <div class="mono" id="chartStat">Vol: 0 • Halted: Yes</div>
           </div>
+          <div class="haltStamp" id="haltStamp">TRADING HALTED</div>
           <canvas id="chart" width="1200" height="520"></canvas>
         </div>
 
@@ -506,6 +624,25 @@
             <div class="item">
               <div class="top"><span class="mono">HYPE</span><span class="neg mono">-$12.99</span></div>
               <div class="main">Expense: “Launch Week Energy” beverage</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="kicker">Episode Scoreboard</div>
+          <div class="panelTitle">Total Catastrophes: {{ app_state.release_stats.total_catastrophes }}</div>
+          <div class="list">
+            <div class="item">
+              <div class="top"><span class="mono">Avg Damage</span><span class="neg mono">-{{ app_state.release_stats.avg_damage_pct }}%</span></div>
+              <div class="main">Average drawdown from release events in your episode log.</div>
+            </div>
+            <div class="item">
+              <div class="top"><span class="mono">Worst Day</span><span class="neg mono">-{{ app_state.release_stats.worst_day_pct }}%</span></div>
+              <div class="main">Maximum single-event pain captured so far.</div>
+            </div>
+            <div class="item">
+              <div class="top"><span class="mono">Severity</span><span class="mono">{{ app_state.release_stats.severity }}</span></div>
+              <div class="main">Live crash severity model based on release count and damage profile.</div>
             </div>
           </div>
         </div>
@@ -659,6 +796,11 @@
     const APP_STATE = {{ app_state | tojson }};
     const CRASH_MODE = !!APP_STATE.crash_mode;
     const LATEST_RELEASE = APP_STATE.latest_release;
+    const RELEASES = APP_STATE.releases || [];
+    const RELEASE_STATS = APP_STATE.release_stats || {};
+    if(CRASH_MODE){
+      document.body.classList.add("crash-mode");
+    }
 
     // ---------- Fake Login ----------
     const lock = document.getElementById("lock");
@@ -669,6 +811,10 @@
     function unlock(mode){
       lock.style.display = "none";
       toast("BOOT", mode === "guest" ? "Guest access granted. Compliance: anxious." : "Access granted. Compliance: extremely concerned.");
+      if(CRASH_MODE && LATEST_RELEASE){
+        toast("ALERT", `Terminal overheating: “${LATEST_RELEASE.title}” released. Portfolio in freefall.`);
+        startMarginCountdown();
+      }
     }
     unlockBtn.addEventListener("click", ()=>{
       const pass = (loginPass.value || "").trim().toUpperCase();
@@ -680,10 +826,37 @@
 
     // ---------- Clock ----------
     const clockEl = document.getElementById("clock");
+    const marginPill = document.getElementById("marginCallPill");
     function tick(){
       clockEl.textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit", second:"2-digit"});
     }
     setInterval(tick, 250); tick();
+
+    // ---------- Margin countdown ----------
+    let marginSeconds = 59;
+    function renderMarginCountdown(){
+      if(!marginPill) return;
+      if(!CRASH_MODE){
+        marginPill.textContent = "Margin: Stable";
+        return;
+      }
+      const mm = String(Math.floor(marginSeconds / 60)).padStart(2, "0");
+      const ss = String(marginSeconds % 60).padStart(2, "0");
+      marginPill.textContent = `Liquidation in ${mm}:${ss}`;
+    }
+    function startMarginCountdown(){
+      if(!CRASH_MODE) return;
+      renderMarginCountdown();
+      const iv = setInterval(()=>{
+        marginSeconds = Math.max(0, marginSeconds - 1);
+        renderMarginCountdown();
+        if(marginSeconds === 0){
+          clearInterval(iv);
+          toast("MARGIN", "Forced liquidation complete. Portfolio moved to afterlife accounting.");
+          if(sfxOn){ beep(300,0.12,0.03); setTimeout(()=>beep(240,0.16,0.03), 140); }
+        }
+      }, 1000);
+    }
 
     // ---------- SFX (simple beeps) ----------
     let sfxOn = false;
@@ -799,6 +972,8 @@
     // ---------- Bloomberg-ish chart ----------
     const canvas = document.getElementById("chart");
     const ctx = canvas.getContext("2d");
+    const haltStamp = document.getElementById("haltStamp");
+    let halted = false;
 
     function randn(){
       let u = 0, v = 0;
@@ -935,6 +1110,50 @@
     drawChart(series);
     updateStats(series);
 
+    function toggleHalt(on){
+      halted = !!on;
+      if(!haltStamp) return;
+      haltStamp.classList.toggle("show", halted);
+    }
+
+    function animateReplay(target){
+      const frames = Math.max(24, target.length);
+      let idx = 8;
+      toggleHalt(false);
+      const iv = setInterval(()=>{
+        idx += 4;
+        const partial = target.slice(0, Math.min(target.length, idx));
+        drawChart(partial);
+        updateStats(partial);
+        if(idx >= target.length){
+          clearInterval(iv);
+          series = target;
+          drawChart(series);
+          updateStats(series);
+          toast("REPLAY", "Crash replay complete.");
+        }
+      }, 38);
+    }
+
+    function startCircuitBreakers(){
+      if(!CRASH_MODE) return;
+      setInterval(()=>{
+        if(document.hidden) return;
+        if(Math.random() < 0.45){
+          toggleHalt(true);
+          toast("HALT", "Circuit breaker triggered.");
+          setTimeout(()=>{
+            toggleHalt(false);
+            if(Math.random() < 0.65){
+              series = makeSeries();
+              drawChart(series);
+              updateStats(series);
+            }
+          }, 2200 + Math.floor(Math.random()*1700));
+        }
+      }, 9000);
+    }
+
     function resizeCanvas(){
       const dpr = Math.max(1, window.devicePixelRatio || 1);
       const wrap = canvas.parentElement.getBoundingClientRect();
@@ -950,6 +1169,7 @@
     }
     window.addEventListener("resize", resizeCanvas);
     setTimeout(resizeCanvas, 50);
+    startCircuitBreakers();
 
     // ---------- Toasts ----------
     const toastWrap = document.getElementById("toasts");
@@ -1062,6 +1282,65 @@
       beep(740,0.05,0.02);
     });
 
+    // ---------- Crash extras ----------
+    function exportDeathCertificate(){
+      const cv = document.createElement("canvas");
+      cv.width = 1400; cv.height = 900;
+      const gx = cv.getContext("2d");
+      const grad = gx.createLinearGradient(0,0,0,cv.height);
+      grad.addColorStop(0, "#1A0A0A");
+      grad.addColorStop(1, "#05070F");
+      gx.fillStyle = grad;
+      gx.fillRect(0,0,cv.width,cv.height);
+
+      gx.strokeStyle = "rgba(255,148,120,0.35)";
+      gx.lineWidth = 4;
+      gx.strokeRect(36,36,cv.width-72,cv.height-72);
+      gx.fillStyle = "#FFD8C2";
+      gx.font = "700 72px system-ui";
+      gx.fillText("PORTFOLIO DEATH CERTIFICATE", 78, 150);
+      gx.font = "500 38px ui-monospace, monospace";
+      gx.fillText(`Owner: Totally Legit Capital`, 78, 250);
+      gx.fillText(`Cause: Episode Release Shock`, 78, 320);
+      gx.fillText(`Latest Episode: ${LATEST_RELEASE ? LATEST_RELEASE.title : "N/A"}`, 78, 390);
+      gx.fillText(`Date: ${LATEST_RELEASE ? LATEST_RELEASE.date : new Date().toISOString().slice(0,10)}`, 78, 460);
+      gx.fillText(`Status: Irreversibly Cooked`, 78, 530);
+      gx.fillStyle = "rgba(255,216,194,0.7)";
+      gx.font = "400 26px ui-monospace, monospace";
+      gx.fillText("PARODY DOCUMENT - NOT REAL FINANCIAL RECORD", 78, 640);
+
+      const url = cv.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "portfolio-death-certificate.png";
+      a.click();
+      toast("DOC", "Death certificate exported.");
+    }
+
+    async function shareMeltdownCard(){
+      const text = `TLC MELTDOWN ALERT: "${LATEST_RELEASE ? LATEST_RELEASE.title : "New episode"}" dropped and the fake short book vaporized. #Parody #NotFinancialAdvice`;
+      try{
+        await navigator.clipboard.writeText(text);
+        toast("SHARE", "Meltdown text copied to clipboard.");
+      }catch{
+        prompt("Copy meltdown text:", text);
+      }
+      const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      window.open(shareUrl, "_blank", "noopener,noreferrer");
+    }
+
+    const replayBtn = document.getElementById("replayCrash");
+    if(replayBtn){
+      replayBtn.addEventListener("click", ()=>{
+        const target = makeSeries(180);
+        animateReplay(target);
+      });
+    }
+    const certBtn = document.getElementById("downloadCert");
+    if(certBtn){ certBtn.addEventListener("click", exportDeathCertificate); }
+    const shareBtn = document.getElementById("shareMeltdown");
+    if(shareBtn){ shareBtn.addEventListener("click", shareMeltdownCard); }
+
     // ---------- Copy disclaimer ----------
     document.getElementById("copyDisclaimer").addEventListener("click", async ()=>{
       const text = "PARODY: This site is satire for entertainment only. Not real finance, not advice. Charts/numbers are fictional.";
@@ -1135,6 +1414,7 @@ else if(k === "c"){
     cliPrint(`<span class="cmd">news</span> — breaking news toast`);
     cliPrint(`<span class="cmd">recalc</span> — recompute fake returns`);
     cliPrint(`<span class="cmd">sfx on</span> | <span class="cmd">sfx off</span> — toggle sound`);
+    cliPrint(`<span class="cmd">pray</span> | <span class="cmd">hedge</span> | <span class="cmd">reverse</span> | <span class="cmd">blame market</span> — panic controls`);
     cliPrint(`<span class="cmd">clear</span> — clear CLI log`);
   }
 
@@ -1205,6 +1485,26 @@ else if(k === "c"){
         si.focus();
       }, 50);
       cliPrint(`<span class="ok">ok:</span> search ready for “${escapeHtml(q)}”.`);
+      return;
+    }
+    if(cmd === "pray"){
+      toast("PRAY", "Prayer submitted. Compliance says this is not a risk framework.");
+      cliPrint(`<span class="warn">warning:</span> prayer queue length: 9,421`);
+      return;
+    }
+    if(cmd === "hedge"){
+      toast("HEDGE", "Opened hedge in SILNCE futures (still fake).");
+      cliPrint(`<span class="ok">ok:</span> hedge filled at terrible price.`);
+      return;
+    }
+    if(cmd === "reverse"){
+      toast("REVERSE", "Attempting to reverse from short to long... spread too wide.");
+      cliPrint(`<span class="err">error:</span> reverse rejected by imagination exchange.`);
+      return;
+    }
+    if(cmd === "blame market"){
+      toast("BLAME", "Statement drafted: macro, rates, and moon phase caused this.");
+      cliPrint(`<span class="dim">press release sent to nobody.</span>`);
       return;
     }
 
